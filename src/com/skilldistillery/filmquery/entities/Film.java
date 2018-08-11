@@ -1,5 +1,6 @@
 package com.skilldistillery.filmquery.entities;
 
+import java.util.List;
 import java.util.Set;
 
 public class Film {
@@ -14,10 +15,14 @@ public class Film {
 	private double replacementCost;
 	private String rating;
 	private String specialFeatures;
-	
+	private List<Actor> actors;
 
-	public Film(int id, String title, String description, int releaseYear, int langId, int rentDur,
-			double rentalRate, int length, double replacementCost, String rating, String specialFeatures) {
+	public Film() {
+		super();
+	}
+
+	public Film(int id, String title, String description, int releaseYear, int langId, int rentDur, double rentalRate,
+			int length, double replacementCost, String rating, String specialFeatures) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -68,15 +73,15 @@ public class Film {
 		return languageID;
 	}
 
-	public void setLanguageID(short languageID) {
-		this.languageID = languageID;
+	public void setLanguageID(int languageId) {
+		this.languageID = languageId;
 	}
 
 	public int getRentalDuration() {
 		return rentalDuration;
 	}
 
-	public void setRentalDuration(byte rentalDuration) {
+	public void setRentalDuration(int rentalDuration) {
 		this.rentalDuration = rentalDuration;
 	}
 
@@ -92,7 +97,7 @@ public class Film {
 		return length;
 	}
 
-	public void setLength(short length) {
+	public void setLength(int length) {
 		this.length = length;
 	}
 
@@ -122,10 +127,10 @@ public class Film {
 
 	@Override
 	public String toString() {
-		return "Film ID: " + id + " | Title: " + title + " | Description: " + description + " | ReleaseYear:" + releaseYear
-				+ " | Language ID: " + languageID + " | Rental Duration: " + rentalDuration + " | Rental Rate: " + rentalRate
-				+ " | Length:" + length + " | Replacement Cost: " + replacementCost + " | Rating: " + rating
-				+ " | Special Features: " + specialFeatures + " | ****************\n";
+		return "Film ID: " + id + " | Title: " + title + " | Description: " + description + " | ReleaseYear:"
+				+ releaseYear + " | Language ID: " + languageID + " | Rental Duration: " + rentalDuration
+				+ " | Rental Rate: " + rentalRate + " | Length:" + length + " | Replacement Cost: " + replacementCost
+				+ " | Rating: " + rating + " | Special Features: " + specialFeatures + " Featuring:  " + actors + " | ****************\n";
 	}
 
 	@Override
@@ -193,6 +198,14 @@ public class Film {
 		} else if (!title.equals(other.title))
 			return false;
 		return true;
+	}
+
+	public List<Actor> getActors() {
+		return this.actors;
+	}
+
+	public void setActors(List<Actor> actors) {
+		this.actors = actors;
 	}
 
 }

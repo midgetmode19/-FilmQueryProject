@@ -7,6 +7,24 @@ public class Actor {
 	private String firstName;
 	private String lastName;
 	private List<Film> films;
+	
+	
+	public Actor() {
+		super();
+	}
+	public Actor(int id, String firstName, String lastName, List<Film> films) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.films = films;
+	}
+	public Actor(int id, String firstName, String lastName) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
 	public int getId() {
 		return id;
 	}
@@ -71,7 +89,7 @@ public class Actor {
 	}
 	@Override
 	public String toString() {
-		return "Actor #" + id + ": " + firstName + " " + lastName + "\t Films: " + films + "\n";
+		return "Actor #" + id + ": " + firstName + " " + lastName + " | Featured in: " + films + "\n";
 	}
 
 	

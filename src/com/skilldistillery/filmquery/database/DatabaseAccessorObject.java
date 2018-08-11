@@ -26,11 +26,35 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		Connection conn;
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
+			String sql = "SELECT id, title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features FROM film WHERE id = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, filmId);
+			ResultSet filmResult = stmt.executeQuery();
+			if (filmResult.next()) {
+				film = new Film();// Create the object
+				// Here is our mapping of query columns to our object fields:
+				film.setId(filmResult.getInt(1));
+				film.setTitle(filmResult.getString(2));
+				film.setDescription(filmResult.getString(3));
+				film.setReleaseYear(filmResult.getInt(4));
+				film.setLanguageID(filmResult.getInt(5));
+				film.setRentalDuration(filmResult.getInt(6));
+				film.setRentalRate(filmResult.getDouble(7));
+				film.setLength(filmResult.getInt(8));
+				film.setReplacementCost(filmResult.getDouble(9));
+				film.setRating(filmResult.getString(10));
+				film.setSpecialFeatures(filmResult.getString(11));
+
+				film.setActors(getActorsByFilmId(filmId)); // A Film has actors
+			}
+			filmResult.close();
+			stmt.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return null;
+		return film;
 	}
 
 	@Override
@@ -50,7 +74,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				actor.setFirstName(actorResult.getString(2));
 				actor.setLastName(actorResult.getString(3));
 				actor.setFilms(getFilmsByActorId(actorId)); // An Actor has Films
-				return actor;
 			}
 			actorResult.close();
 			stmt.close();
@@ -59,7 +82,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			e.printStackTrace();
 		}
 
-		return null;
+		return actor;
 	}
 
 	@Override
@@ -67,17 +90,16 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		List<Actor> actors = new ArrayList<>();
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, pass);
-			String sql = "";
-			
+			String sql = "SELECT actor.id, actor.first_name, actor.last_name FROM actor JOIN film_actor ON actor.id = film_actor.actor_id WHERE film_id = ?";
+
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, filmId);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				int id;
-				String firstName;
-				String lastName;
-				List<Film> films;
-				Actor actor = new Actor();
+				int id = rs.getInt(1);
+				String firstName = rs.getString(2);
+				String lastName = rs.getString(3);
+				Actor actor = new Actor(id, firstName, lastName);
 				actors.add(actor);
 			}
 			rs.close();
@@ -86,8 +108,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		return null;
+		return actors;
 	}
 
 	public List<Film> getFilmsByActorId(int actorId) {
