@@ -49,9 +49,10 @@ public class FilmQueryApp {
 	}
 
 	private void startUserInterface(Scanner input) {
-		printMenu();
-		int menuSelect = input.nextInt();
-		do {
+		int menuSelect = -1;
+		while (menuSelect != 0) {
+			printMenu();
+			menuSelect = input.nextInt();
 
 			if (menuSelect == 1) {
 				System.out.println("Enter Film ID #: ");
@@ -59,18 +60,20 @@ public class FilmQueryApp {
 				System.out.println(db.getFilmById(filmId));
 
 			} else if (menuSelect == 2) {
-				System.out.println("Search keyword: ");
+				System.out.println("Enter your search keyword: ");
 				String keyWord = input.nextLine();
-				
 
-			} else {
+			} else if (menuSelect == 0) {
+				System.out.println("Bye");
+				System.exit(0);
+			}
+			else {
 				System.out.println("That is not a valid selection.");
 				input.reset();
 				printMenu();
 				menuSelect = input.nextInt();
 			}
-		} while (menuSelect != 0);
-		System.out.println("Bye");
+		}
 		input.close();
 	}
 

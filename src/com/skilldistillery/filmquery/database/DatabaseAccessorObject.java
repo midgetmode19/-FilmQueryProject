@@ -145,5 +145,43 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		}
 		return films;
 	}
+	public List<Film> getFilmBySearchKeyWord(String keyWord) {
+		List<Film> films = new ArrayList<>();
+		try {
+			Connection conn = DriverManager.getConnection(URL, user, pass);
+			String sql = "SELECT id, title, description, release_year, language_id, rental_duration, ";
+			sql += " rental_rate, length, replacement_cost, rating, special_features "
+					+ " FROM film JOIN film_actor ON film.id = film_actor.film_id " + " WHERE actor_id = ?";
+			// change the WHERE statement to %?
+			// add this method to DatabaseAccessor
+			// call this method in FilmQueryApp
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, keyWord);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				int filmId = rs.getInt(1);
+				String title = rs.getString(2);
+				String desc = rs.getString(3);
+				short releaseYear = rs.getShort(4);
+				int langId = rs.getInt(5);
+				int rentDur = rs.getInt(6);
+				double rate = rs.getDouble(7);
+				int length = rs.getInt(8);
+				double repCost = rs.getDouble(9);
+				String rating = rs.getString(10);
+				String features = rs.getString(11);
+				Film film = new Film(filmId, title, desc, releaseYear, langId, rentDur, rate, length, repCost, rating,
+						features);
+				films.add(film);
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return films;
+		
+	}
 
 }
