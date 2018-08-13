@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.skilldistillery.filmquery.entities.Actor;
 import com.skilldistillery.filmquery.entities.Film;
+import com.skilldistillery.filmquery.entities.Language;
 
 public class DatabaseAccessorObject implements DatabaseAccessor {
 	private static final String URL = "jdbc:mysql://localhost:3306/sdvid?useSSL=false";
@@ -27,7 +28,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
 //			String sql = "SELECT id, title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features FROM film WHERE id = ?";
-			String sql = "SELECT title, description, release_year, rating FROM film WHERE id = ?";
+			String sql = "SELECT film.title, film.description, film.release_year, film.rating, language.name FROM film JOIN language ON film.language_id = language.id WHERE film.id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, filmId);
 			ResultSet filmResult = stmt.executeQuery();
@@ -38,6 +39,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				film.setDescription(filmResult.getString(2));
 				film.setReleaseYear(filmResult.getInt(3));
 				film.setRating(filmResult.getString(4));
+				film.setLanguage(filmResult.getString(5));
 //				film.setId(filmResult.getInt(1));
 //				film.setTitle(filmResult.getString(2));
 //				film.setDescription(filmResult.getString(3));
@@ -50,7 +52,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 //				film.setRating(filmResult.getString(10));
 //				film.setSpecialFeatures(filmResult.getString(11));
 
-//				film.setActors(getActorsByFilmId(filmId)); // A Film has actors
+				film.setActors(getActorsByFilmId(filmId)); // A Film has actors
 			}
 			filmResult.close();
 			stmt.close();
@@ -152,11 +154,10 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 	public List<Film> getFilmsBySearchKeyWord(String keyWord) {
 		List<Film> films = new ArrayList<>();
-		//keyWord = "%" + keyWord + "%";
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, pass);
-			String sql = "SELECT title, description, release_year, rating FROM film WHERE title LIKE ?"
-					+ " OR description LIKE ?;";
+			String sql = "SELECT film.title, film.description, film.release_year, film.rating, language.name, film.id FROM film JOIN language ON film.language_id = language.id WHERE film.title LIKE ?"
+					+ " OR film.description LIKE ?;";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, "%" + keyWord + "%");
 			stmt.setString(2, "%" + keyWord + "%");
@@ -166,7 +167,10 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				String desc = rs.getString(2);
 				short releaseYear = rs.getShort(3);
 				String rating = rs.getString(4);
-				Film film = new Film(title, desc, releaseYear, rating);
+				String language = rs.getString(5);
+				int filmId = rs.getInt(6);
+				List<Actor> actors = getActorsByFilmId(filmId);
+				Film film = new Film(title, desc, releaseYear, rating, language, actors);
 				films.add(film);
 			}
 			rs.close();

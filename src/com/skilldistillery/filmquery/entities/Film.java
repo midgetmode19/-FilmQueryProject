@@ -1,7 +1,6 @@
 package com.skilldistillery.filmquery.entities;
 
 import java.util.List;
-import java.util.Set;
 
 public class Film {
 	private int id;
@@ -15,18 +14,21 @@ public class Film {
 	private double replacementCost;
 	private String rating;
 	private String specialFeatures;
+	private String language;
 	private List<Actor> actors;
 
 	public Film() {
 		super();
 	}
-	public Film(String title, String description, int releaseYear, String rating) {
+
+	public Film(String title, String description, int releaseYear, String rating, String language) {
 		super();
 		this.title = title;
 		this.description = description;
 		this.releaseYear = releaseYear;
 		this.rating = rating;
-		
+		this.language = language;
+
 	}
 
 	public Film(int id, String title, String description, int releaseYear, int langId, int rentDur, double rentalRate,
@@ -43,6 +45,28 @@ public class Film {
 		this.replacementCost = replacementCost;
 		this.rating = rating;
 		this.specialFeatures = specialFeatures;
+	}
+
+	public Film(String title, String desc, short releaseYear, String rating, String language, List<Actor> actors) {
+		super();
+		this.title = title;
+		this.description = desc;
+		this.releaseYear = releaseYear;
+		this.rating = rating;
+		this.language = language;
+		this.actors = actors;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	public String getSpecialFeatures() {
+		return specialFeatures;
 	}
 
 	public int getId() {
@@ -133,17 +157,10 @@ public class Film {
 		this.specialFeatures = specialFeatures;
 	}
 
-//	@Override
-//	public String toString() {
-//		return "Film ID: " + id + " | Title: " + title + " | Description: " + description + " | ReleaseYear:"
-//				+ releaseYear + " | Language ID: " + languageID + " | Rental Duration: " + rentalDuration
-//				+ " | Rental Rate: " + rentalRate + " | Length:" + length + " | Replacement Cost: " + replacementCost
-//				+ " | Rating: " + rating + " | Special Features: " + specialFeatures + " Featuring:  " + actors + " | ****************\n";
-//	}
 	@Override
 	public String toString() {
-		return "Title: " + title + " | Description: " + description + " | ReleaseYear:"
-				+ releaseYear + " | Rating: " + rating + " | ****************\n";
+		return " Title: " + title + " | Description: " + description + " | ReleaseYear:" + releaseYear + " | Language "
+				+ language + " | Rating: " + rating + " | Language: " + language + "\nFeaturing: " + actors + " | ****************\n";
 	}
 
 	@Override

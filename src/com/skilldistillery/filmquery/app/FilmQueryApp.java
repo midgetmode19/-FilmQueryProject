@@ -1,13 +1,13 @@
 package com.skilldistillery.filmquery.app;
 
 import java.util.InputMismatchException;
-import java.util.List;
+//import java.util.List;
 import java.util.Scanner;
 
 import com.skilldistillery.filmquery.database.DatabaseAccessor;
 import com.skilldistillery.filmquery.database.DatabaseAccessorObject;
-import com.skilldistillery.filmquery.entities.Actor;
-import com.skilldistillery.filmquery.entities.Film;
+//import com.skilldistillery.filmquery.entities.Actor;
+//import com.skilldistillery.filmquery.entities.Film;
 
 public class FilmQueryApp {
 
@@ -58,9 +58,8 @@ public class FilmQueryApp {
 				System.out.println("Enter Film ID #: ");
 				int filmId = input.nextInt();
 				if (db.getFilmById(filmId) != null) {
-					System.out.println(db.getFilmById(filmId));					
-				}
-				else {
+					System.out.println(db.getFilmById(filmId));
+				} else {
 					System.out.println("Movie not found.");
 				}
 				// need to display movie title, year, rating, and description
@@ -72,8 +71,7 @@ public class FilmQueryApp {
 				String keyWord = searchKeyWord.nextLine();
 				if (db.getFilmsBySearchKeyWord(keyWord).isEmpty()) {
 					System.out.println("No matches found.");
-				}
-				else {
+				} else {
 					System.out.println(db.getFilmsBySearchKeyWord(keyWord));
 				}
 				// searchKeyWord.close();
@@ -82,8 +80,7 @@ public class FilmQueryApp {
 			} else if (menuSelect == 0) {
 				System.out.println("Bye");
 				System.exit(0);
-			}
-			else {
+			} else {
 				System.out.println("That is not a valid selection.");
 				input.reset();
 				printMenu();
