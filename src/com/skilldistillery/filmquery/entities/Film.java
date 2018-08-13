@@ -20,6 +20,14 @@ public class Film {
 	public Film() {
 		super();
 	}
+	public Film(String title, String description, int releaseYear, String rating) {
+		super();
+		this.title = title;
+		this.description = description;
+		this.releaseYear = releaseYear;
+		this.rating = rating;
+		
+	}
 
 	public Film(int id, String title, String description, int releaseYear, int langId, int rentDur, double rentalRate,
 			int length, double replacementCost, String rating, String specialFeatures) {
@@ -125,12 +133,17 @@ public class Film {
 		this.specialFeatures = specialFeatures;
 	}
 
+//	@Override
+//	public String toString() {
+//		return "Film ID: " + id + " | Title: " + title + " | Description: " + description + " | ReleaseYear:"
+//				+ releaseYear + " | Language ID: " + languageID + " | Rental Duration: " + rentalDuration
+//				+ " | Rental Rate: " + rentalRate + " | Length:" + length + " | Replacement Cost: " + replacementCost
+//				+ " | Rating: " + rating + " | Special Features: " + specialFeatures + " Featuring:  " + actors + " | ****************\n";
+//	}
 	@Override
 	public String toString() {
-		return "Film ID: " + id + " | Title: " + title + " | Description: " + description + " | ReleaseYear:"
-				+ releaseYear + " | Language ID: " + languageID + " | Rental Duration: " + rentalDuration
-				+ " | Rental Rate: " + rentalRate + " | Length:" + length + " | Replacement Cost: " + replacementCost
-				+ " | Rating: " + rating + " | Special Features: " + specialFeatures + " Featuring:  " + actors + " | ****************\n";
+		return "Title: " + title + " | Description: " + description + " | ReleaseYear:"
+				+ releaseYear + " | Rating: " + rating + " | ****************\n";
 	}
 
 	@Override

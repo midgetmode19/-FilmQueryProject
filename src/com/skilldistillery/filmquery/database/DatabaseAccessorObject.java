@@ -26,26 +26,31 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		Connection conn;
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
-			String sql = "SELECT id, title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features FROM film WHERE id = ?";
+//			String sql = "SELECT id, title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features FROM film WHERE id = ?";
+			String sql = "SELECT title, description, release_year, rating FROM film WHERE id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, filmId);
 			ResultSet filmResult = stmt.executeQuery();
 			if (filmResult.next()) {
 				film = new Film();// Create the object
 				// Here is our mapping of query columns to our object fields:
-				film.setId(filmResult.getInt(1));
-				film.setTitle(filmResult.getString(2));
-				film.setDescription(filmResult.getString(3));
-				film.setReleaseYear(filmResult.getInt(4));
-				film.setLanguageID(filmResult.getInt(5));
-				film.setRentalDuration(filmResult.getInt(6));
-				film.setRentalRate(filmResult.getDouble(7));
-				film.setLength(filmResult.getInt(8));
-				film.setReplacementCost(filmResult.getDouble(9));
-				film.setRating(filmResult.getString(10));
-				film.setSpecialFeatures(filmResult.getString(11));
+				film.setTitle(filmResult.getString(1));
+				film.setDescription(filmResult.getString(2));
+				film.setReleaseYear(filmResult.getInt(3));
+				film.setRating(filmResult.getString(4));
+//				film.setId(filmResult.getInt(1));
+//				film.setTitle(filmResult.getString(2));
+//				film.setDescription(filmResult.getString(3));
+//				film.setReleaseYear(filmResult.getInt(4));
+//				film.setLanguageID(filmResult.getInt(5));
+//				film.setRentalDuration(filmResult.getInt(6));
+//				film.setRentalRate(filmResult.getDouble(7));
+//				film.setLength(filmResult.getInt(8));
+//				film.setReplacementCost(filmResult.getDouble(9));
+//				film.setRating(filmResult.getString(10));
+//				film.setSpecialFeatures(filmResult.getString(11));
 
-				film.setActors(getActorsByFilmId(filmId)); // A Film has actors
+//				film.setActors(getActorsByFilmId(filmId)); // A Film has actors
 			}
 			filmResult.close();
 			stmt.close();
@@ -53,7 +58,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		return film;
 	}
 
@@ -145,33 +149,24 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		}
 		return films;
 	}
-	public List<Film> getFilmBySearchKeyWord(String keyWord) {
+
+	public List<Film> getFilmsBySearchKeyWord(String keyWord) {
 		List<Film> films = new ArrayList<>();
+		//keyWord = "%" + keyWord + "%";
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, pass);
-			String sql = "SELECT id, title, description, release_year, language_id, rental_duration, ";
-			sql += " rental_rate, length, replacement_cost, rating, special_features "
-					+ " FROM film JOIN film_actor ON film.id = film_actor.film_id " + " WHERE actor_id = ?";
-			// change the WHERE statement to %?
-			// add this method to DatabaseAccessor
-			// call this method in FilmQueryApp
+			String sql = "SELECT title, description, release_year, rating FROM film WHERE title LIKE ?"
+					+ " OR description LIKE ?;";
 			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setString(1, keyWord);
+			stmt.setString(1, "%" + keyWord + "%");
+			stmt.setString(2, "%" + keyWord + "%");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				int filmId = rs.getInt(1);
-				String title = rs.getString(2);
-				String desc = rs.getString(3);
-				short releaseYear = rs.getShort(4);
-				int langId = rs.getInt(5);
-				int rentDur = rs.getInt(6);
-				double rate = rs.getDouble(7);
-				int length = rs.getInt(8);
-				double repCost = rs.getDouble(9);
-				String rating = rs.getString(10);
-				String features = rs.getString(11);
-				Film film = new Film(filmId, title, desc, releaseYear, langId, rentDur, rate, length, repCost, rating,
-						features);
+				String title = rs.getString(1);
+				String desc = rs.getString(2);
+				short releaseYear = rs.getShort(3);
+				String rating = rs.getString(4);
+				Film film = new Film(title, desc, releaseYear, rating);
 				films.add(film);
 			}
 			rs.close();
@@ -181,7 +176,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			e.printStackTrace();
 		}
 		return films;
-		
+
 	}
 
 }

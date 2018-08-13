@@ -57,11 +57,27 @@ public class FilmQueryApp {
 			if (menuSelect == 1) {
 				System.out.println("Enter Film ID #: ");
 				int filmId = input.nextInt();
-				System.out.println(db.getFilmById(filmId));
+				if (db.getFilmById(filmId) != null) {
+					System.out.println(db.getFilmById(filmId));					
+				}
+				else {
+					System.out.println("Movie not found.");
+				}
+				// need to display movie title, year, rating, and description
+				// need to implement movie not found ("if null...")
 
 			} else if (menuSelect == 2) {
+				Scanner searchKeyWord = new Scanner(System.in);
 				System.out.println("Enter your search keyword: ");
-				String keyWord = input.nextLine();
+				String keyWord = searchKeyWord.nextLine();
+				if (db.getFilmsBySearchKeyWord(keyWord).isEmpty()) {
+					System.out.println("No matches found.");
+				}
+				else {
+					System.out.println(db.getFilmsBySearchKeyWord(keyWord));
+				}
+				// searchKeyWord.close();
+				// Closing this scanner throws an exception
 
 			} else if (menuSelect == 0) {
 				System.out.println("Bye");
@@ -74,7 +90,6 @@ public class FilmQueryApp {
 				menuSelect = input.nextInt();
 			}
 		}
-		input.close();
 	}
 
 	private void printMenu() {
